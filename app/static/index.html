@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GTM 4-Agent Real-Time Production Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.05); }
+    }
+    .pulse-live { animation: pulse-glow 2s infinite ease-in-out; }
+    .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Top Navigation Header -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-6 py-3.5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div class="flex items-center space-x-3.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 ring-1 ring-white/20">
+          <i class="fa-solid fa-arrows-split-up-and-left text-white text-base"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2.5">
+            <h1 class="font-bold text-base tracking-tight text-white">GTM 4-Agent Platform</h1>
+            <span id="engine-badge" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span>
+              <span id="engine-mode-text">Initializing...</span>
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">Step-by-Step Intelligent Go-To-Market Automation</p>
+        </div>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="flex items-center gap-2.5">
+        <button id="btn-run-all" onclick="runAllSteps()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white rounded-lg font-semibold text-xs transition flex items-center gap-2 shadow-lg shadow-indigo-600/30">
+          <i class="fa-solid fa-bolt"></i> Run All Steps (End-to-End)
+        </button>
+        <button onclick="resetPipeline()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg text-xs font-medium transition flex items-center gap-1.5">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
+        <a href="/docs" target="_blank" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg text-xs font-medium transition flex items-center gap-1.5">
+          <i class="fa-solid fa-book"></i> API Docs
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto w-full p-6 space-y-6 flex-1 flex flex-col">
+
+    <!-- STEPPER NAVIGATION BAR -->
+    <nav class="bg-slate-900 border border-slate-800 rounded-2xl p-2.5 shadow-sm">
+      <div class="grid grid-cols-4 gap-2">
+
+        <!-- Step 1 Tab -->
+        <button id="tab-step-1" onclick="switchStep(1)" class="step-tab flex items-center gap-3 p-3 rounded-xl border border-indigo-500/50 bg-indigo-500/10 text-left transition group">
+          <div id="step-icon-1" class="w-8 h-8 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">1</div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-bold text-white group-hover:text-indigo-300 transition">Demand Sensing</span>
+              <span id="badge-step-1" class="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300">Active</span>
+            </div>
+            <p class="text-[11px] text-slate-400 truncate">Market Signals & Trends</p>
+          </div>
+        </button>
+
+        <!-- Step 2 Tab -->
+        <button id="tab-step-2" onclick="switchStep(2)" class="step-tab flex items-center gap-3 p-3 rounded-xl border border-transparent hover:border-slate-700 bg-slate-900/50 hover:bg-slate-800/50 text-left transition group">
+          <div id="step-icon-2" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-700">2</div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-bold text-slate-300 group-hover:text-white transition">Customer Profiling</span>
+              <span id="badge-step-2" class="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-slate-800 text-slate-500">Pending</span>
+            </div>
+            <p class="text-[11px] text-slate-400 truncate">ICP Fit & Segmentation</p>
+          </div>
+        </button>
+
+        <!-- Step 3 Tab -->
+        <button id="tab-step-3" onclick="switchStep(3)" class="step-tab flex items-center gap-3 p-3 rounded-xl border border-transparent hover:border-slate-700 bg-slate-900/50 hover:bg-slate-800/50 text-left transition group">
+          <div id="step-icon-3" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-700">3</div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-bold text-slate-300 group-hover:text-white transition">Outbound Strategy</span>
+              <span id="badge-step-3" class="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-slate-800 text-slate-500">Pending</span>
+            </div>
+            <p class="text-[11px] text-slate-400 truncate">Copy & HITL Approval</p>
+          </div>
+        </button>
+
+        <!-- Step 4 Tab -->
+        <button id="tab-step-4" onclick="switchStep(4)" class="step-tab flex items-center gap-3 p-3 rounded-xl border border-transparent hover:border-slate-700 bg-slate-900/50 hover:bg-slate-800/50 text-left transition group">
+          <div id="step-icon-4" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-700">4</div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-bold text-slate-300 group-hover:text-white transition">Manager Agent</span>
+              <span id="badge-step-4" class="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-slate-800 text-slate-500">Pending</span>
+            </div>
+            <p class="text-[11px] text-slate-400 truncate">Master Strategy & KPIs</p>
+          </div>
+        </button>
+
+      </div>
+    </nav>
+
+    <!-- ACTIVE STEP PANELS -->
+    <div class="flex-1 flex flex-col">
+
+      <!-- ============================================================= -->
+      <!-- STEP 1 PANEL: DEMAND SENSING AGENT -->
+      <!-- ============================================================= -->
+      <section id="panel-step-1" class="step-panel space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-md bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center">1</span>
+                <h2 class="text-lg font-bold text-white">Demand Sensing Agent</h2>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Monitors real-time market shifts, search intent, and competitive signals to uncover high-conviction opportunities.</p>
+            </div>
+            <button id="btn-run-step-1" onclick="runSingleStep(1)" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-blue-600/20">
+              <i class="fa-solid fa-play"></i> Run Step 1: Detect Signals
+            </button>
+          </div>
+
+          <!-- Ingestion Input Controls -->
+          <div class="mt-5 grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div class="lg:col-span-1 space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800/80">
+              <label class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-satellite-dish text-blue-400"></i> Inject Real-Time Signal
+              </label>
+              <textarea id="input-signal-text" rows="3" class="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-blue-500 transition" placeholder="Enter market signal headline..."></textarea>
+              <div class="flex items-center justify-between gap-2">
+                <button onclick="injectSampleSignal('Enterprise AI adoption for sales prospecting surged 75% in Q3; CFOs prioritize rep efficiency tools.')" class="text-[11px] text-blue-400 hover:text-blue-300 underline">
+                  Insert example
+                </button>
+                <button onclick="submitLiveSignal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded text-xs font-medium transition">
+                  <i class="fa-solid fa-arrow-up-from-bracket mr-1"></i> Ingest
+                </button>
+              </div>
+            </div>
+
+            <!-- Output Display -->
+            <div id="output-step-1" class="lg:col-span-2 space-y-4">
+              <div class="h-44 border border-dashed border-slate-800 rounded-xl flex flex-col items-center justify-center text-slate-500 text-xs p-6 text-center">
+                <i class="fa-solid fa-chart-line text-2xl mb-2 text-slate-600"></i>
+                <p>No signals evaluated yet.</p>
+                <p class="text-[11px] text-slate-600 mt-1">Click <strong class="text-slate-400">Run Step 1</strong> to sense market demand from context or live feeds.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation Footer -->
+          <div class="mt-6 pt-4 border-t border-slate-800 flex justify-end">
+            <button onclick="switchStep(2)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold transition flex items-center gap-2">
+              Next: Customer Profiling <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- STEP 2 PANEL: CUSTOMER PROFILING AGENT -->
+      <!-- ============================================================= -->
+      <section id="panel-step-2" class="step-panel hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-md bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center">2</span>
+                <h2 class="text-lg font-bold text-white">Customer Profiling Agent</h2>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Evaluates target accounts against your Ideal Customer Profile (ICP) and demand context with quantitative fit scoring.</p>
+            </div>
+            <button id="btn-run-step-2" onclick="runSingleStep(2)" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-emerald-600/20">
+              <i class="fa-solid fa-play"></i> Run Step 2: Score Accounts
+            </button>
+          </div>
+
+          <!-- Ingestion Input Controls -->
+          <div class="mt-5 grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div class="lg:col-span-1 space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800/80">
+              <label class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-user-plus text-emerald-400"></i> Ingest New CRM Lead
+              </label>
+              <div class="space-y-2">
+                <input id="input-lead-company" type="text" placeholder="Company Name (e.g. Apex HealthTech)" class="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                <div class="grid grid-cols-2 gap-2">
+                  <input id="input-lead-emp" type="number" placeholder="Employees (e.g. 450)" class="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                  <input id="input-lead-sales" type="number" placeholder="Sales Reps (e.g. 35)" class="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                </div>
+                <input id="input-lead-pain" type="text" placeholder="Pain Point (e.g. manual lead research)" class="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+              </div>
+              <button onclick="submitLiveLead()" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded text-xs font-medium transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-plus"></i> Ingest Lead
+              </button>
+            </div>
+
+            <!-- Output Display -->
+            <div id="output-step-2" class="lg:col-span-2 space-y-4">
+              <div class="h-44 border border-dashed border-slate-800 rounded-xl flex flex-col items-center justify-center text-slate-500 text-xs p-6 text-center">
+                <i class="fa-solid fa-users-viewfinder text-2xl mb-2 text-slate-600"></i>
+                <p>No customer accounts profiled yet.</p>
+                <p class="text-[11px] text-slate-600 mt-1">Click <strong class="text-slate-400">Run Step 2</strong> to evaluate customer segments against ICP.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation Footer -->
+          <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between">
+            <button onclick="switchStep(1)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium transition flex items-center gap-2">
+              <i class="fa-solid fa-arrow-left"></i> Back to Step 1
+            </button>
+            <button onclick="switchStep(3)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold transition flex items-center gap-2">
+              Next: Outbound Strategy <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- STEP 3 PANEL: OUTBOUND AGENT & HITL APPROVAL -->
+      <!-- ============================================================= -->
+      <section id="panel-step-3" class="step-panel hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-md bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center">3</span>
+                <h2 class="text-lg font-bold text-white">Outbound Campaign Agent & HITL Gateway</h2>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Generates multi-channel sales sequences with Human-In-The-Loop review before dispatching live.</p>
+            </div>
+            <button id="btn-run-step-3" onclick="runSingleStep(3)" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-purple-600/20">
+              <i class="fa-solid fa-play"></i> Run Step 3: Craft Outbound Copy
+            </button>
+          </div>
+
+          <!-- Output Display & HITL Approval -->
+          <div id="output-step-3" class="mt-5 space-y-4">
+            <div class="h-44 border border-dashed border-slate-800 rounded-xl flex flex-col items-center justify-center text-slate-500 text-xs p-6 text-center">
+              <i class="fa-solid fa-paper-plane text-2xl mb-2 text-slate-600"></i>
+              <p>No outbound campaigns generated yet.</p>
+              <p class="text-[11px] text-slate-600 mt-1">Click <strong class="text-slate-400">Run Step 3</strong> to generate tailored sequences.</p>
+            </div>
+          </div>
+
+          <!-- Navigation Footer -->
+          <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between">
+            <button onclick="switchStep(2)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium transition flex items-center gap-2">
+              <i class="fa-solid fa-arrow-left"></i> Back to Step 2
+            </button>
+            <button onclick="switchStep(4)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold transition flex items-center gap-2">
+              Next: Executive Strategy <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- STEP 4 PANEL: MANAGER AGENT (EXECUTIVE GTM STRATEGY) -->
+      <!-- ============================================================= -->
+      <section id="panel-step-4" class="step-panel hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-md bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center justify-center">4</span>
+                <h2 class="text-lg font-bold text-white">Manager Agent (Master GTM Strategy)</h2>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Synthesizes all intelligence into an executive strategic roadmap with testable hypotheses and risk registers.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="downloadStrategyJson()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg text-xs font-medium transition flex items-center gap-1.5">
+                <i class="fa-solid fa-download"></i> Export JSON
+              </button>
+              <button id="btn-run-step-4" onclick="runSingleStep(4)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20">
+                <i class="fa-solid fa-play"></i> Run Step 4: Synthesize
+              </button>
+            </div>
+          </div>
+
+          <!-- Output Display -->
+          <div id="output-step-4" class="mt-5 space-y-4">
+            <div class="h-44 border border-dashed border-slate-800 rounded-xl flex flex-col items-center justify-center text-slate-500 text-xs p-6 text-center">
+              <i class="fa-solid fa-chess-knight text-2xl mb-2 text-slate-600"></i>
+              <p>Master strategy has not been synthesized yet.</p>
+              <p class="text-[11px] text-slate-600 mt-1">Click <strong class="text-slate-400">Run Step 4</strong> to formulate executive strategy.</p>
+            </div>
+          </div>
+
+          <!-- Navigation Footer -->
+          <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between">
+            <button onclick="switchStep(3)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium transition flex items-center gap-2">
+              <i class="fa-solid fa-arrow-left"></i> Back to Step 3
+            </button>
+            <button onclick="switchStep(1)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium transition flex items-center gap-2">
+              <i class="fa-solid fa-rotate-left"></i> Review from Step 1
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- COLLAPSIBLE LIVE EVENT FEED (SSE CONSOLE) -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+      <div onclick="toggleConsole()" class="px-4 py-2.5 bg-slate-800/60 hover:bg-slate-800 flex items-center justify-between cursor-pointer border-b border-slate-800 transition select-none">
+        <div class="flex items-center gap-2.5">
+          <i class="fa-solid fa-terminal text-slate-400 text-xs"></i>
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Live Orchestration Stream</span>
+          <span id="sse-badge" class="text-[10px] font-mono text-emerald-400 flex items-center gap-1.5 ml-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Connected
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] text-slate-400" id="console-toggle-text">Minimize</span>
+          <i id="console-toggle-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition"></i>
+        </div>
+      </div>
+      <div id="console-body" class="p-3 bg-slate-950 font-mono text-xs text-slate-300 space-y-1 h-32 overflow-y-auto custom-scroll">
+        <div class="text-slate-500">[System] Real-time SSE event bus initialized. Ready for operations.</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Notification Toast Container -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition duration-300 bg-slate-900 border border-slate-700 text-slate-100 px-4 py-3 rounded-xl shadow-2xl text-xs flex items-center gap-2.5"></div>
+
+  <!-- Application Logic -->
+  <script>
+    let currentStep = 1;
+    let pipelineData = {
+      demand: null,
+      customer: null,
+      outbound: null,
+      manager: null
+    };
+
+    // Initialize System Status
+    async function initSystem() {
+      try {
+        const resp = await fetch("/healthz");
+        const health = await resp.json();
+        const modeBadge = document.getElementById("engine-mode-text");
+        if (health.gemini_configured) {
+          modeBadge.innerText = `Gemini Live (${health.model})`;
+          modeBadge.parentElement.className = "text-[11px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 flex items-center gap-1.5";
+        } else {
+          modeBadge.innerText = "Offline Heuristic Fallback Mode";
+          modeBadge.parentElement.className = "text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5";
+        }
+      } catch (e) {
+        console.error("Health check error", e);
+      }
+      connectSSE();
+      loadLatestStrategy();
+    }
+
+    // Step Switching
+    function switchStep(stepNumber) {
+      currentStep = stepNumber;
+      // Hide all panels
+      document.querySelectorAll(".step-panel").forEach(p => p.classList.add("hidden"));
+      document.getElementById(`panel-step-${stepNumber}`).classList.remove("hidden");
+
+      // Update tab styling
+      for (let i = 1; i <= 4; i++) {
+        const tab = document.getElementById(`tab-step-${i}`);
+        const icon = document.getElementById(`step-icon-${i}`);
+        const badge = document.getElementById(`badge-step-${i}`);
+
+        if (i === stepNumber) {
+          tab.className = "step-tab flex items-center gap-3 p-3 rounded-xl border border-indigo-500/50 bg-indigo-500/10 text-left transition group";
+          icon.className = "w-8 h-8 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-sm";
+          badge.className = "text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300";
+          badge.innerText = "Active";
+        } else {
+          const isDone = (i === 1 && pipelineData.demand) ||
+                         (i === 2 && pipelineData.customer) ||
+                         (i === 3 && pipelineData.outbound) ||
+                         (i === 4 && pipelineData.manager);
+
+          if (isDone) {
+            tab.className = "step-tab flex items-center gap-3 p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/5 text-left transition group";
+            icon.className = "w-8 h-8 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0";
+            icon.innerHTML = '<i class="fa-solid fa-check text-xs"></i>';
+            badge.className = "text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300";
+            badge.innerText = "Completed";
+          } else {
+            tab.className = "step-tab flex items-center gap-3 p-3 rounded-xl border border-transparent hover:border-slate-700 bg-slate-900/50 hover:bg-slate-800/50 text-left transition group";
+            icon.className = "w-8 h-8 rounded-lg bg-slate-800 text-slate-400 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-700";
+            icon.innerText = i;
+            badge.className = "text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-slate-800 text-slate-500";
+            badge.innerText = "Pending";
+          }
+        }
+      }
+    }
+
+    // Connect to Server-Sent Events
+    function connectSSE() {
+      const evtSource = new EventSource("/api/v1/gtm/stream");
+
+      evtSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          appendLog(data.agent, data.message, data.status);
+          handleLiveEvent(data);
+        } catch (e) {
+          console.error("SSE parse error", e);
+        }
+      };
+
+      evtSource.onerror = () => {
+        document.getElementById("sse-badge").innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Reconnecting...`;
+        setTimeout(connectSSE, 3000);
+      };
+
+      evtSource.onopen = () => {
+        document.getElementById("sse-badge").innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Connected`;
+      };
+    }
+
+    function appendLog(agent, msg, status) {
+      const consoleBody = document.getElementById("console-body");
+      const time = new Date().toLocaleTimeString();
+      const div = document.createElement("div");
+      div.className = "flex gap-2 items-start py-0.5";
+      
+      let badgeColor = "text-slate-400";
+      if (status === "completed") badgeColor = "text-emerald-400";
+      else if (status === "processing") badgeColor = "text-indigo-400";
+      else if (status === "approved") badgeColor = "text-emerald-300 font-bold";
+      else if (status === "rejected") badgeColor = "text-rose-400 font-bold";
+
+      div.innerHTML = `<span class="text-slate-600">[${time}]</span> <span class="text-indigo-400 font-semibold">[${agent}]</span> <span class="${badgeColor}">${msg}</span>`;
+      consoleBody.appendChild(div);
+      consoleBody.scrollTop = consoleBody.scrollHeight;
+    }
+
+    function handleLiveEvent(evt) {
+      if (evt.step === "demand_sensing" && evt.data) {
+        pipelineData.demand = evt.data;
+        renderStep1(evt.data);
+      }
+      if (evt.step === "customer_profiling" && evt.data) {
+        pipelineData.customer = evt.data;
+        renderStep2(evt.data);
+      }
+      if (evt.step === "outbound" && evt.data) {
+        pipelineData.outbound = evt.data;
+        renderStep3(evt.data);
+      }
+      if (evt.step === "manager" && evt.data) {
+        pipelineData.manager = evt.data;
+        renderStep4(evt.data);
+      }
+      if (evt.step === "hitl_gateway" && evt.data && pipelineData.outbound) {
+        pipelineData.outbound.status = evt.data.status;
+        renderStep3(pipelineData.outbound);
+      }
+    }
+
+    // Step 1: Render Demand Sensing
+    function renderStep1(data) {
+      const target = document.getElementById("output-step-1");
+      const signals = data.demand_signals || [];
+      const opps = data.opportunities || [];
+      const risks = data.risks || [];
+
+      let signalsHtml = signals.map(s => {
+        let badgeColor = "bg-blue-500/20 text-blue-400 border-blue-500/30";
+        if (s.strength === "critical" || s.strength === "high") badgeColor = "bg-rose-500/20 text-rose-300 border-rose-500/40";
+
+        return `
+          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800/80 flex items-center justify-between gap-3">
+            <div>
+              <p class="text-xs text-slate-200 font-medium">${s.signal}</p>
+              <div class="flex items-center gap-2 mt-1.5 text-[11px] text-slate-400">
+                <span><i class="fa-solid fa-tag text-slate-500 mr-1"></i>${s.category || 'Market Trend'}</span>
+                <span>•</span>
+                <span>Confidence: <strong class="text-slate-300">${Math.round((s.confidence || 0.9) * 100)}%</strong></span>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border ${badgeColor} shrink-0">
+              ${s.strength} / ${s.trend}
+            </span>
+          </div>
+        `;
+      }).join("");
+
+      let oppsHtml = opps.map(o => `
+        <li class="flex items-start gap-2 text-xs text-slate-300">
+          <i class="fa-solid fa-circle-check text-emerald-400 text-xs mt-0.5"></i>
+          <span>${o}</span>
+        </li>
+      `).join("");
+
+      let risksHtml = risks.map(r => `
+        <li class="flex items-start gap-2 text-xs text-slate-400">
+          <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs mt-0.5"></i>
+          <span>${r}</span>
+        </li>
+      `).join("");
+
+      target.innerHTML = `
+        <div class="space-y-4">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Detected Market Signals (${signals.length})</div>
+            <div class="space-y-2">${signalsHtml}</div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-400 mb-2.5 block">High-Conviction Opportunities</span>
+              <ul class="space-y-2">${oppsHtml}</ul>
+            </div>
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 mb-2.5 block">Strategic Market Risks</span>
+              <ul class="space-y-2">${risksHtml}</ul>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 2: Render Customer Profiling
+    function renderStep2(data) {
+      const target = document.getElementById("output-step-2");
+      const segments = data.segments || [];
+
+      let segmentsHtml = segments.map(s => {
+        let fitBadge = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+        if (s.icp_fit === "low") fitBadge = "bg-amber-500/20 text-amber-400 border-amber-500/30";
+        if (s.icp_fit === "disqualified") fitBadge = "bg-rose-500/20 text-rose-400 border-rose-500/30";
+
+        return `
+          <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800/80 flex items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-sm text-white">${s.company}</span>
+                <span class="text-xs text-slate-400 font-normal">(${s.industry})</span>
+                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${fitBadge}">${s.icp_fit} FIT</span>
+              </div>
+              <p class="text-xs text-slate-400">
+                <i class="fa-solid fa-users text-slate-500 mr-1"></i>${s.employees} Employees • ${s.sales_team_size} Sales Reps
+              </p>
+              <p class="text-xs text-indigo-300 font-medium">
+                <i class="fa-solid fa-bullseye text-indigo-400 mr-1"></i>${s.key_value_driver || 'Core productivity optimization'}
+              </p>
+            </div>
+            <div class="text-right shrink-0">
+              <div class="text-base font-extrabold ${s.fit_score >= 70 ? 'text-emerald-400' : 'text-amber-400'}">${s.fit_score}%</div>
+              <div class="text-[10px] uppercase font-bold text-slate-500">ICP Score</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      target.innerHTML = `
+        <div class="space-y-4">
+          <div class="p-4 bg-emerald-950/30 border border-emerald-800/50 rounded-xl flex items-center justify-between">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 block">Identified Priority Segment</span>
+              <p class="text-sm font-semibold text-emerald-200 mt-0.5">${data.priority_segment}</p>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-500/20 text-emerald-300 rounded-lg">Target Ready</span>
+          </div>
+          <div class="space-y-2.5">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Account Fit Breakdown (${segments.length} Accounts)</div>
+            ${segmentsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 3: Render Outbound Agent & HITL Gateway
+    function renderStep3(data) {
+      const target = document.getElementById("output-step-3");
+      const variant = data.variants && data.variants[0] ? data.variants[0] : null;
+
+      let statusBadge = "bg-amber-500/20 text-amber-300 border-amber-500/40";
+      let statusText = "PENDING APPROVAL";
+      if (data.status === "approved") {
+        statusBadge = "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
+        statusText = "APPROVED FOR DISPATCH";
+      } else if (data.status === "rejected") {
+        statusBadge = "bg-rose-500/20 text-rose-300 border-rose-500/40";
+        statusText = "REJECTED";
+      }
+
+      let emailView = variant ? `
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span><strong>Target Persona:</strong> ${variant.target_persona}</span>
+            <button onclick="copyToClipboard('${variant.email.subject}\\n\\n${variant.email.body.replace(/\n/g, '\\n')}')" class="text-indigo-400 hover:text-indigo-300">
+              <i class="fa-regular fa-copy mr-1"></i> Copy Email
+            </button>
+          </div>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-3">
+            <div class="text-xs text-slate-300 font-semibold border-b border-slate-800/80 pb-2">
+              <span class="text-slate-500">Subject:</span> ${variant.email.subject}
+            </div>
+            <div class="text-xs text-slate-300 whitespace-pre-line leading-relaxed font-sans">${variant.email.body}</div>
+          </div>
+        </div>
+      ` : `<div class="p-4 bg-slate-950 rounded-xl">${data.message}</div>`;
+
+      let linkedinView = variant ? `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+          <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">LinkedIn Connection Note (&lt;300 chars)</span>
+            <p class="text-xs text-slate-300">${variant.linkedin.connection_note}</p>
+          </div>
+          <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Direct InMail Pitch</span>
+            <p class="text-xs text-slate-300">${variant.linkedin.inmail_message}</p>
+          </div>
+        </div>
+      ` : '';
+
+      let hitlControls = `
+        <div class="mt-4 p-4 bg-slate-950/80 rounded-xl border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-user-shield text-purple-400"></i> Human-In-The-Loop Approval Gateway
+            </span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${statusBadge}">${statusText}</span>
+          </div>
+          <p class="text-xs text-slate-400">Review copy accuracy, brand tone, and compliance before live transmission to outbound senders.</p>
+          <div class="flex items-center gap-3 pt-1">
+            <button onclick="submitReview('${data.campaign_id}', true)" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-semibold rounded-lg text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20">
+              <i class="fa-solid fa-check"></i> Approve & Dispatch Campaign
+            </button>
+            <button onclick="submitReview('${data.campaign_id}', false)" class="flex-1 py-2 bg-slate-800 hover:bg-rose-900/60 hover:text-rose-200 text-slate-300 font-semibold rounded-lg text-xs border border-slate-700 transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-xmark"></i> Reject / Request Revision
+            </button>
+          </div>
+        </div>
+      `;
+
+      target.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-purple-950/20 border border-purple-800/40 rounded-xl">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-purple-400">Target Segment</span>
+              <p class="text-xs font-semibold text-purple-200">${data.target_segment}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Active Channels</span>
+              <p class="text-xs font-medium text-slate-200">${(data.channels || []).join(", ")}</p>
+            </div>
+          </div>
+          ${emailView}
+          ${linkedinView}
+          ${hitlControls}
+        </div>
+      `;
+    }
+
+    // Step 4: Render Manager Agent & GTM Strategy
+    function renderStep4(data) {
+      const target = document.getElementById("output-step-4");
+      const hypotheses = data.assumptions_to_validate || [];
+      const actions = data.next_actions || [];
+
+      let hypoHtml = hypotheses.map(h => {
+        if (typeof h === "object") {
+          return `
+            <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
+              <p class="text-xs font-semibold text-slate-200">${h.assumption}</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] text-slate-400 border-t border-slate-800/60 pt-2">
+                <div><span class="text-slate-500 font-medium">Test Method:</span> ${h.test_method}</div>
+                <div><span class="text-emerald-400 font-medium">Success KPI:</span> ${h.success_metric}</div>
+              </div>
+            </div>
+          `;
+        }
+        return `<div class="p-3 bg-slate-950 rounded-lg text-xs text-slate-300">${h}</div>`;
+      }).join("");
+
+      let actionsHtml = actions.map(a => {
+        if (typeof a === "object") {
+          let badge = "bg-rose-500/20 text-rose-300 border-rose-500/40";
+          if (a.priority === "P1") badge = "bg-amber-500/20 text-amber-300 border-amber-500/40";
+          if (a.priority === "P2") badge = "bg-slate-800 text-slate-400 border-slate-700";
+
+          return `
+            <li class="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${badge}">${a.priority || 'P1'}</span>
+                <span class="text-xs text-slate-200 font-medium">${a.action}</span>
+              </div>
+              <span class="text-xs text-slate-400 shrink-0 font-medium">${a.owner || 'GTM Team'}</span>
+            </li>
+          `;
+        }
+        return `<li>${a}</li>`;
+      }).join("");
+
+      target.innerHTML = `
+        <div class="space-y-4">
+          <div class="p-4 bg-amber-950/20 border border-amber-800/40 rounded-xl space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Executive GTM Strategy Brief</span>
+              <span class="text-xs font-bold text-amber-300">Confidence: ${Math.round((data.confidence_score || 0.9) * 100)}%</span>
+            </div>
+            <p class="text-xs text-slate-200 leading-relaxed">${data.gtm_strategy}</p>
+          </div>
+
+          <div class="space-y-2">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Core Hypotheses to Validate</div>
+            <div class="space-y-2">${hypoHtml}</div>
+          </div>
+
+          <div class="space-y-2 pt-2">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Immediate Execution Roadmap</div>
+            <ul class="space-y-2">${actionsHtml}</ul>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step-wise Execution API Calls
+    async function runSingleStep(stepNum) {
+      const btn = document.getElementById(`btn-run-step-${stepNum}`);
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Running Step ${stepNum}...`;
+
+      try {
+        let endpoint = "";
+        let body = null;
+
+        if (stepNum === 1) endpoint = "/api/v1/gtm/step/demand";
+        else if (stepNum === 2) endpoint = "/api/v1/gtm/step/customer";
+        else if (stepNum === 3) endpoint = "/api/v1/gtm/step/outbound";
+        else if (stepNum === 4) endpoint = "/api/v1/gtm/step/manager";
+
+        const resp = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: body ? JSON.stringify(body) : null
+        });
+
+        const res = await resp.json();
+        if (res.status === "success") {
+          showToast(`Step ${stepNum} completed successfully!`, "success");
+          switchStep(stepNum);
+        }
+      } catch (err) {
+        showToast(`Failed Step ${stepNum}: ${err}`, "error");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-play"></i> Run Step ${stepNum}`;
+      }
+    }
+
+    async function runAllSteps() {
+      const btn = document.getElementById("btn-run-all");
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Running Pipeline...`;
+
+      try {
+        const resp = await fetch("/api/v1/gtm/run", { method: "POST" });
+        const res = await resp.json();
+        showToast(`Full pipeline completed in ${res.execution_time_seconds}s!`, "success");
+        switchStep(4);
+      } catch (err) {
+        showToast("Pipeline error: " + err, "error");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-bolt"></i> Run All Steps (End-to-End)`;
+      }
+    }
+
+    async function submitLiveSignal() {
+      const text = document.getElementById("input-signal-text").value.trim();
+      if (!text) {
+        showToast("Please enter a market signal first.", "info");
+        return;
+      }
+      await fetch("/api/v1/signals/ingest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ signals: [text], source: "web_console" })
+      });
+      document.getElementById("input-signal-text").value = "";
+      showToast("Real-time market signal ingested!", "success");
+      switchStep(1);
+    }
+
+    function injectSampleSignal(text) {
+      document.getElementById("input-signal-text").value = text;
+    }
+
+    async function submitLiveLead() {
+      const comp = document.getElementById("input-lead-company").value.trim();
+      const emp = parseInt(document.getElementById("input-lead-emp").value) || 250;
+      const sales = parseInt(document.getElementById("input-lead-sales").value) || 20;
+      const pain = document.getElementById("input-lead-pain").value.trim() || "Manual lead research";
+
+      if (!comp) {
+        showToast("Please enter a company name.", "info");
+        return;
+      }
+
+      await fetch("/api/v1/customers/ingest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customers: [{
+            company: comp,
+            industry: "B2B SaaS",
+            employees: emp,
+            sales_team_size: sales,
+            pain_points: [pain]
+          }],
+          source: "crm_web_form"
+        })
+      });
+
+      document.getElementById("input-lead-company").value = "";
+      document.getElementById("input-lead-pain").value = "";
+      showToast(`Lead '${comp}' ingested & scored!`, "success");
+      switchStep(2);
+    }
+
+    async function submitReview(campaignId, approved) {
+      await fetch(`/api/v1/campaigns/${campaignId}/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          campaign_id: campaignId,
+          approved: approved,
+          reviewer_notes: approved ? "Approved for dispatch" : "Rejected by reviewer"
+        })
+      });
+      showToast(`Campaign ${approved ? 'Approved' : 'Rejected'}!`, approved ? "success" : "info");
+    }
+
+    async function resetPipeline() {
+      if (!confirm("Are you sure you want to reset current pipeline state?")) return;
+      await fetch("/api/v1/gtm/reset", { method: "POST" });
+      pipelineData = { demand: null, customer: null, outbound: null, manager: null };
+      location.reload();
+    }
+
+    async function loadLatestStrategy() {
+      try {
+        const resp = await fetch("/api/v1/strategy/latest");
+        if (resp.ok) {
+          const res = await resp.json();
+          if (res.demand) { pipelineData.demand = res.demand; renderStep1(res.demand); }
+          if (res.customer) { pipelineData.customer = res.customer; renderStep2(res.customer); }
+          if (res.outbound) { pipelineData.outbound = res.outbound; renderStep3(res.outbound); }
+          if (res.manager) { pipelineData.manager = res.manager; renderStep4(res.manager); }
+          switchStep(1);
+        }
+      } catch (e) {
+        // No saved run yet
+      }
+    }
+
+    function downloadStrategyJson() {
+      if (!pipelineData.manager) {
+        showToast("No completed strategy to export yet.", "info");
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(pipelineData, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `gtm_strategy_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+      showToast("Copied to clipboard!", "success");
+    }
+
+    function toggleConsole() {
+      const body = document.getElementById("console-body");
+      const icon = document.getElementById("console-toggle-icon");
+      const label = document.getElementById("console-toggle-text");
+      if (body.classList.contains("hidden")) {
+        body.classList.remove("hidden");
+        icon.className = "fa-solid fa-chevron-down text-slate-400 text-xs transition";
+        label.innerText = "Minimize";
+      } else {
+        body.classList.add("hidden");
+        icon.className = "fa-solid fa-chevron-up text-slate-400 text-xs transition";
+        label.innerText = "Expand";
+      }
+    }
+
+    function showToast(msg, type = "info") {
+      const toast = document.getElementById("toast");
+      let icon = '<i class="fa-solid fa-circle-info text-blue-400"></i>';
+      if (type === "success") icon = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+      if (type === "error") icon = '<i class="fa-solid fa-circle-exclamation text-rose-400"></i>';
+
+      toast.innerHTML = `${icon} <span>${msg}</span>`;
+      toast.classList.remove("translate-y-20", "opacity-0");
+      setTimeout(() => {
+        toast.classList.add("translate-y-20", "opacity-0");
+      }, 3500);
+    }
+
+    // Start on load
+    window.addEventListener("DOMContentLoaded", initSystem);
+  </script>
+</body>
+</html>

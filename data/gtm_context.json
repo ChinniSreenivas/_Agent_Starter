@@ -1,0 +1,70 @@
+{
+  "company": {
+    "name": "DemoAI",
+    "description": "AI-powered sales automation platform"
+  },
+  "product": {
+    "name": "DemoAI Sales Intelligence",
+    "description": "Helps B2B sales teams research, qualify and prioritize leads.",
+    "features": [
+      "Lead research",
+      "Lead qualification",
+      "Sales intelligence",
+      "Personalized outreach"
+    ]
+  },
+  "target_market": {
+    "industry": "B2B SaaS",
+    "company_size": "200-1000 employees",
+    "geography": "Global"
+  },
+  "icp": {
+    "target_roles": [
+      "VP Sales",
+      "Head of Sales",
+      "Revenue Operations"
+    ],
+    "pain_points": [
+      "Manual lead research",
+      "Poor lead qualification",
+      "Low outreach personalization",
+      "Sales productivity"
+    ]
+  },
+  "sample_market_signals": [
+    "B2B sales teams are increasing investment in sales automation.",
+    "Sales teams report that manual lead research consumes significant time.",
+    "Personalized outreach is becoming more important as generic outreach becomes less effective."
+  ],
+  "sample_customer_data": [
+    {
+      "company": "Alpha SaaS",
+      "industry": "B2B SaaS",
+      "employees": 500,
+      "pain_points": [
+        "manual lead research",
+        "poor qualification"
+      ],
+      "sales_team_size": 40
+    },
+    {
+      "company": "Beta Retail",
+      "industry": "Retail",
+      "employees": 300,
+      "pain_points": [
+        "inventory management"
+      ],
+      "sales_team_size": 8
+    },
+    {
+      "company": "Gamma SaaS",
+      "industry": "B2B SaaS",
+      "employees": 800,
+      "pain_points": [
+        "manual lead research",
+        "low personalization"
+      ],
+      "sales_team_size": 70
+    }
+  ]
+}

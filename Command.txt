@@ -1,0 +1,43 @@
+cd /d D:\gtm_4_agent_starter
+.venv\Scripts\activate
+python -m app.main
+
+
+
+### 🚀 Prompt 1 — AI Sales Automation
+> B2B SaaS companies are rapidly adopting AI-powered sales automation. Sales representatives are spending too much time on manual lead research, qualification, and CRM updates, creating demand for automated sales intelligence tools.
+
+### 📈 Prompt 2 — Growing Market Demand
+> Mid-market B2B SaaS companies are expanding their sales teams and need scalable systems to identify high-quality prospects, prioritize accounts, and personalize outreach without increasing manual workload.
+
+### 🎯 Prompt 3 — Personalization
+> Generic sales emails are becoming less effective. B2B sales teams are increasingly looking for AI tools that can analyze prospect information and generate highly personalized outreach based on company needs and buying signals.
+
+### 🤖 Prompt 4 — AI Lead Qualification
+> Sales teams are receiving large volumes of leads but lack sufficient time to manually research and qualify every prospect. AI-based lead scoring and qualification could help sales representatives focus on the highest-value opportunities.
+
+### 💼 Prompt 5 — CRM Intelligence
+> Companies are looking for AI solutions that integrate with their CRM systems to automatically enrich accounts, summarize prospect information, identify buying signals, and reduce repetitive research work for sales representatives.
+
+### 🔥 Prompt 6 — Competitive Pressure
+> B2B SaaS companies are facing increasing competition and need faster ways to identify target accounts and engage prospects. Sales leaders are exploring AI-powered intelligence and automation to improve their outbound processes.
+
+### 📊 Prompt 7 — Sales Productivity
+> Sales representatives spend significant portions of their working hours researching prospects and preparing for calls. Sales leaders are interested in automation that can reduce research time and allow representatives to spend more time on qualified conversations.
+
+### 💰 Prompt 8 — ROI Focus
+> Sales leaders are increasingly evaluating AI tools based on measurable productivity improvements and return on investment. Solutions that reduce manual research time and increase qualified pipeline generation are receiving greater attention.
+
+### 🏢 Prompt 9 — Target Customer Signal
+> Mid-market B2B SaaS companies with 200 to 1000 employees and sales teams of more than 20 representatives are actively looking for ways to automate lead research, account intelligence, qualification, and personalized outbound campaigns.
+
+### 🧪 Prompt 10 — Strong Demo Prompt
+> A growing B2B SaaS company has a 50-person sales team. Representatives spend several hours each week researching prospects manually before outreach. The company wants an AI solution that can automatically research accounts, identify relevant buying signals, prioritize leads, and generate personalized email and LinkedIn messages.
+
+### ⭐ For your project demonstration
+
+I'd use **Prompt 10** because it gives your four agents enough information to demonstrate the complete flow:
+
+**Real-time signal → Demand Sensing → Customer Profiling → Outbound Strategy → Manager Strategy**
+
+Paste Prompt 10 into **Inject Real-Time Signal → Ingest → Run Step 1**.

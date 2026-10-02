@@ -1,0 +1,198 @@
+{
+  "pipeline_id": "pipe_b19a7cc2",
+  "completed_at": "2026-10-02T18:33:02.912031+00:00",
+  "execution_time_seconds": 0.95,
+  "demand": {
+    "agent": "Demand Sensing Agent",
+    "timestamp": "2026-10-02T18:33:02.905773Z",
+    "demand_signals": [
+      {
+        "signal": "B2B sales teams are increasing investment in sales automation.",
+        "strength": "high",
+        "trend": "increasing",
+        "category": "Market Urgency",
+        "confidence": 0.92
+      },
+      {
+        "signal": "Sales teams report that manual lead research consumes significant time.",
+        "strength": "high",
+        "trend": "persistent",
+        "category": "Sales Operations",
+        "confidence": 0.87
+      },
+      {
+        "signal": "Personalized outreach is becoming more important as generic outreach becomes less effective.",
+        "strength": "medium",
+        "trend": "increasing",
+        "category": "Sales Operations",
+        "confidence": 0.8200000000000001
+      }
+    ],
+    "opportunities": [
+      "Automated AI lead research and qualification for high-velocity B2B SaaS teams",
+      "Contextual intelligence layer integrating directly into CRM to eliminate manual rep overhead",
+      "Hyper-personalized outreach generation to combat email deliverability fatigue"
+    ],
+    "risks": [
+      "Market saturation from generic AI copy generators causing prospect fatigue",
+      "Data accuracy and hallucination risks in automated lead qualification"
+    ],
+    "executive_summary": "B2B buyers are demanding higher personalization while reps are bogged down by manual prospecting. Strong tailwinds for automated qualification."
+  },
+  "customer": {
+    "agent": "Customer Profiling Agent",
+    "timestamp": "2026-10-02T18:33:02.907918Z",
+    "segments": [
+      {
+        "company": "Alpha SaaS",
+        "industry": "B2B SaaS",
+        "employees": 500,
+        "sales_team_size": 40,
+        "pain_points": [
+          "manual lead research",
+          "poor qualification"
+        ],
+        "icp_fit": "high",
+        "fit_score": 92.5,
+        "key_value_driver": "Accelerate pipeline velocity and automate repetitive rep research."
+      },
+      {
+        "company": "Beta Retail",
+        "industry": "Retail",
+        "employees": 300,
+        "sales_team_size": 8,
+        "pain_points": [
+          "inventory management"
+        ],
+        "icp_fit": "low",
+        "fit_score": 45.0,
+        "key_value_driver": "Foundational sales intelligence."
+      },
+      {
+        "company": "Gamma SaaS",
+        "industry": "B2B SaaS",
+        "employees": 800,
+        "sales_team_size": 70,
+        "pain_points": [
+          "manual lead research",
+          "low personalization"
+        ],
+        "icp_fit": "high",
+        "fit_score": 92.5,
+        "key_value_driver": "Accelerate pipeline velocity and automate repetitive rep research."
+      }
+    ],
+    "priority_segment": "Mid-market B2B SaaS (200-1000 employees) with dedicated sales teams of 20+ reps",
+    "disqualified_count": 0,
+    "total_evaluated": 3
+  },
+  "outbound": {
+    "agent": "Outbound Agent",
+    "timestamp": "2026-10-02T18:33:02.910133Z",
+    "campaign_id": "cmp_1790965982",
+    "target_segment": "Mid-market B2B SaaS (200-1000 employees) with dedicated sales teams of 20+ reps",
+    "value_proposition": "Automate lead intelligence and research so reps focus 100% on qualified pipeline.",
+    "channels": [
+      "Email",
+      "LinkedIn",
+      "Cold Call"
+    ],
+    "message": "Targeted outreach sequence crafted for Mid-market B2B SaaS (200-1000 employees) with dedicated sales teams of 20+ reps. Leverages the acute pain of rep research overhead with quantified ROI proof points.",
+    "cta": "Book a 15-minute qualification discovery call",
+    "variants": [
+      {
+        "target_persona": "VP of Sales",
+        "email": {
+          "subject": "Slashing 15+ hours of manual lead research for your reps",
+          "body": "Hi {{first_name}},\n\nNoticed that your sales team at {{company}} is scaling rapidly. Most sales leaders in Mid-market B2B SaaS (200-1000 employees) with dedicated sales teams of 20+ reps tell us their reps spend over 35% of their week digging through LinkedIn and CRM records instead of having qualified sales conversations.\n\nDemoAI Sales Intelligence automates lead qualification and research before your reps ever dial. Teams like Alpha SaaS saw a 40% reduction in prep time within 3 weeks.\n\nOpen to a brief 10-minute walkthrough next Tuesday?\n\nBest,\nAlex\nDemoAI",
+          "hook": "Manual research is capping rep outbound capacity during high-growth phases."
+        },
+        "linkedin": {
+          "connection_note": "Hi {{first_name}} - seeing great growth at {{company}}. We help sales teams in Mid-market B2B SaaS (200-1000 employees) with dedicated sales teams of 20+ reps eliminate manual lead research. Would love to connect here!",
+          "inmail_message": "Hi {{first_name}},\n\nQuick question: are your reps still manually researching prospects before calling? We built DemoAI Sales Intelligence to automate account intelligence so sales teams can focus purely on closing.\n\nWorth a quick chat this week?"
+        },
+        "cold_call": {
+          "opener": "Hi {{first_name}}, Alex here with DemoAI. I know I caught you out of the blue, do you have 30 seconds to tell me if I should hang up?",
+          "elevator_pitch": "We work with VPs of Sales in Mid-market B2B SaaS (200-1000 employees) with dedicated sales teams of 20+ reps who are tired of reps wasting hours researching leads that aren't even qualified. We automate that entire research layer directly in your CRM.",
+          "objection_handling": [
+            {
+              "objection": "We already use ZoomInfo/Apollo",
+              "rebuttal": "We actually plug right into Apollo and ZoomInfo to synthesize the research rather than just giving you raw contact lists."
+            },
+            {
+              "objection": "Send me an email",
+              "rebuttal": "Happy to send an email! To make sure it's actually relevant, are your reps struggling more with qualification or list building right now?"
+            }
+          ]
+        }
+      }
+    ],
+    "compliance_passed": true,
+    "status": "pending_approval"
+  },
+  "manager": {
+    "agent": "Manager Agent",
+    "timestamp": "2026-10-02T18:33:02.911555Z",
+    "strategy_id": "gtm_1790965982",
+    "gtm_strategy": "Execute an account-based growth sprint targeting Mid-market B2B SaaS (200-1000 employees) with dedicated sales teams of 20+ reps. Pair real-time lead research automation with hyper-relevant multi-channel messaging to capture pipeline before competitors capitalize on macro market demand.",
+    "priority_segment": "Mid-market B2B SaaS (200-1000 employees) with dedicated sales teams of 20+ reps",
+    "market_reason": [
+      "Automated AI lead research and qualification for high-velocity B2B SaaS teams",
+      "Contextual intelligence layer integrating directly into CRM to eliminate manual rep overhead",
+      "Hyper-personalized outreach generation to combat email deliverability fatigue"
+    ],
+    "positioning": "Automate lead intelligence and research so reps focus 100% on qualified pipeline.",
+    "recommended_channels": [
+      "Email",
+      "LinkedIn",
+      "Cold Call"
+    ],
+    "key_risks": [
+      {
+        "risk": "Market saturation from generic AI copy generators causing prospect fatigue",
+        "severity": "high",
+        "mitigation": "Implement strict quality gates and account-specific personalization before outbound dispatch."
+      },
+      {
+        "risk": "Data accuracy and hallucination risks in automated lead qualification",
+        "severity": "medium",
+        "mitigation": "Implement strict quality gates and account-specific personalization before outbound dispatch."
+      }
+    ],
+    "assumptions_to_validate": [
+      {
+        "assumption": "Mid-market B2B SaaS sales leaders have sufficient lead volume to justify automated qualification.",
+        "test_method": "Conduct 10 discovery calls with VPs of Sales in the target segment.",
+        "success_metric": "70%+ of respondents confirm spending >10 hours/week on manual research."
+      },
+      {
+        "assumption": "Personalized, pain-specific outreach outperforms standard industry templates.",
+        "test_method": "Run an A/B test of 200 prospects split evenly between pain-specific copy and generic pitch.",
+        "success_metric": "Achieve >= 6.5% positive reply rate on personalized variant vs < 2% on control."
+      }
+    ],
+    "next_actions": [
+      {
+        "action": "Finalize approval of outbound sequence variants and load into sales engagement platform.",
+        "owner": "RevOps Lead",
+        "priority": "P0"
+      },
+      {
+        "action": "Enrich list of top 100 Tier-1 accounts matching priority segment with verified contact info.",
+        "owner": "SDR Lead",
+        "priority": "P0"
+      },
+      {
+        "action": "Launch A/B outbound pilot campaign across Email and LinkedIn channels.",
+        "owner": "Growth Marketing",
+        "priority": "P1"
+      },
+      {
+        "action": "Establish weekly review cadence to feed conversion data back into Manager Agent.",
+        "owner": "Head of GTM",
+        "priority": "P1"
+      }
+    ],
+    "confidence_score": 0.91
+  }
+}
